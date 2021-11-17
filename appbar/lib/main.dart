@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MyHome());
-
-class MyHome extends StatefulWidget {
-  const MyHome({Key? key}) : super(key: key);
-
-  @override
-  _MyHomeState createState() => _MyHomeState();
+void main(){
+  runApp(MyApp());
 }
 
-class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin{
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
+
   late TabController _tabController;
   @override
   void initState() {
@@ -17,31 +20,42 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin{
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'AppBar Deep Dive',
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.green,
-          elevation: 30, //shadow
+          elevation: 50,
           shadowColor: Colors.green,
-          toolbarOpacity: .9,
-          // toolbarHeight: 70,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(10),
           ),
           leading: Icon(Icons.menu),
           title: Text("AppBar Deep Dive"),
           centerTitle: true,
           actions: [
-            Container(padding: EdgeInsets.all(5),child: Icon(Icons.person)),
-            Container(padding: EdgeInsets.all(5),child: Icon(Icons.search)),
-            Container(padding: EdgeInsets.all(5),child: Icon(Icons.more_vert)),
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Icon(Icons.person),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: IconButton(
+                icon: Icon(Icons.search),
+                onPressed: (){
+                  print("Searchig something");
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Icon(Icons.more_vert),
+            ),
           ],
           bottom: TabBar(
-
             controller: _tabController,
             tabs: [
               Tab(
@@ -54,20 +68,19 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin{
               ),
               Tab(
                 icon: Icon(Icons.shopping_cart),
-                text: 'Shopping',
+                text: 'Cart',
               ),
             ],
           ),
         ),
-
         body: TabBarView(
           controller: _tabController,
           children: [
-            Center(child: Text("Person")),
-            Center(child: Text("Travel")),
-            Center(child: Text("Shopping")),
+            Center(child: Text("Person Tab")),
+            Center(child: Text("Travel Tab")),
+            Center(child: Text("Shopping Tab")),
           ],
-        ),
+        )
       ),
     );
   }
