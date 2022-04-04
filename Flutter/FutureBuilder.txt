@@ -1,0 +1,13 @@
+FutureBuilder(
+              future: getData(),
+              builder: (_, snapshot) {
+                return ListView.builder(
+                  // itemCount: snapshot.data.length,
+                  itemBuilder: (_, index) {
+                    DocumentSnapshot data = snapshot.data[index];
+                    return ListTile(
+                      title: data['name'],
+                    );
+                  },
+                );
+              }),

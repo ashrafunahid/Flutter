@@ -1,0 +1,37 @@
+Step-1:
+Image.File(File('/storage/emulated/0/Download/image.jpg')),
+import dart.io file
+
+Step-2:
+Go to android->app->src->main->AndroidManifest.xml
+add before <application>
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+Step-3:
+Go to pubspec.yaml file
+add 
+dependencies:
+  flutter:
+    sdk: flutter
+  permission_handler: ^6.0.0
+Click on pub get
+
+Step-4:
+Go to main.dart file
+add below code in funciton
+String filepath = '';
+  Future<void> checkPermission() async{
+    if(await Permission.storage.request().isGranted){
+      setState(() {
+        filepath = '/storage/emulated/0/Download/';
+      });
+    }
+    else{
+      await Permission.storage.request();
+    }
+  }
+call the function before return widget
+or follow the ImageView.dart file
+
+
