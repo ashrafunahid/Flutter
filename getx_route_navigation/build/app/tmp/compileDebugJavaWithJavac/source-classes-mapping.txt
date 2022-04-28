@@ -1,0 +1,6 @@
+io/flutter/plugins/GeneratedPluginRegistrant.java
+ io.flutter.plugins.GeneratedPluginRegistrant
+com/example/getx_route_navigation/MainActivity.java
+ com.example.getx_route_navigation.MainActivity
+com/example/getx_route_navigation/BuildConfig.java
+ com.example.getx_route_navigation.BuildConfig
