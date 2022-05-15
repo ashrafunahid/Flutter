@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 
 void main() {
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     home: Scaffold(
       body: MyBody(),
     ),
@@ -31,43 +32,83 @@ class _MyBodyState extends State<MyBody> {
     Colors.lightBlueAccent,
   ];
 
+  int _currentCarousel = 0;
+  final CarouselController _controller = CarouselController();
 
   List<String> _ImageList = [
-    'https://www.motorsheba.com/public/uploads/all/2KbbeFxhBGovjfAn2alWvhvtZB5GBIYU6NHLPFnG.jpg',
-    'https://www.motorsheba.com/public/uploads/all/9Ns8gzn8ChnUgOIhAIWNye9xk5ET93YlIH9VJyox.jpg',
-    'https://www.motorsheba.com/public/uploads/all/bTvY9vmEO79TgloA3ClrsmAs5ZgGX2LcAWbWz9q3.jpg',
-    'https://www.motorsheba.com/public/uploads/all/tb2BxzCqjmsacYVYpdZia8nYKo0zHX3EMJMAIuuW.jpg',
-    'https://www.motorsheba.com/public/uploads/all/LxHDKY8szyCM8LGKHjw4S38mUTjIEUqv9hzvtylc.jpg',
+    'https://www.motorsheba.com/public/uploads/all/0XVy9KfTTOKNsOca2juJIItue8vQJ4CzKXxcqPTG.jpg',
+    'https://www.motorsheba.com/public/uploads/all/3HyiJU0UDx0G2muZrgWws1al4LhnWk82W9K1aIQj.jpg',
+    'https://www.motorsheba.com/public/uploads/all/wWvhE7GYDD9yCxySy5DJxzOYbiktg9ATQ2VsgUNP.jpg',
+    'https://www.motorsheba.com/public/uploads/all/WWfkIhuOJlTb3L7KpKYbdR6P7tmAR1SJOJaczLxM.jpg',
   ];
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: CarouselSlider.builder(
-          itemCount: _ImageList.length,
-          itemBuilder: (context, index, pageIndex){
-            return Card(
-              elevation: 15,
-              child: Container(
-                alignment: Alignment.center,
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            color: Colors.white,
+            child: CarouselSlider.builder(
+              carouselController: _controller,
+              itemCount: _ImageList.length,
+              itemBuilder: (context, index, pageIndex) {
+                return Card(
                   color: _MyColorList[index],
-                ),
-                // child: Text(index.toString(), style: TextStyle(fontSize: 100, fontWeight: FontWeight.bold, color: Colors.white),),
-                child: Image(image: NetworkImage(_ImageList[index]), fit: BoxFit.cover,),
+                  elevation: 0,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    // alignment: Alignment.center,
+                    child: Image(
+                      image: NetworkImage(_ImageList[index]),
+                      // height: MediaQuery.of(context).size.height,
+                      // width: MediaQuery.of(context).size.width,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              },
+              options: CarouselOptions(
+                  enableInfiniteScroll: true,
+                  enlargeCenterPage: true,
+                  height: MediaQuery.of(context).size.height*.21,
+                  aspectRatio: 16/9,
+                  scrollDirection: Axis.horizontal,
+                  viewportFraction: 1.0,
+                  autoPlay: true,
+                  pauseAutoPlayOnTouch: true,
+                  autoPlayAnimationDuration: Duration(milliseconds: 500),
+                  autoPlayInterval: Duration(seconds: 3),
+                  onPageChanged: (index, reason){
+                    setState(() {
+                      _currentCarousel = index;
+                    });
+                  }
               ),
-            );
-          },
-          options: CarouselOptions(
-            height: 250,
-            aspectRatio: 16/9,
-            initialPage: 10,
-            autoPlay: true,
-            autoPlayAnimationDuration: Duration(seconds: 1),
+            ),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: _ImageList.asMap().entries.map((entry){
+              return GestureDetector(
+                onTap: () => _controller.animateToPage(entry.key),
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 500),
+                  width: _currentCarousel == entry.key ? 30:10,
+                  height: 10.0,
+                  margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 4.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    image: DecorationImage(image: AssetImage(_currentCarousel == entry.key ? "assets/icon/red_bar.png":"",)),
+                    // shape: _currentCarousel == entry.key ? BoxShape.circle:BoxShape.rectangle,
+                    color: Colors.red.withOpacity(_currentCarousel == entry.key ? 0.9:0.4),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
       ),
     );
   }
