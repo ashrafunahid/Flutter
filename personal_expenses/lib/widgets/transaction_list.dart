@@ -12,7 +12,10 @@ class TransactionList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height*.50,
-      child: ListView.builder(
+      child: transaction.isEmpty ? Container(
+        height: MediaQuery.of(context).size.height*.20,
+        child: Image.asset('assets/images/hourglass.gif', fit: BoxFit.cover,),
+      ) : ListView.builder(
         itemCount: transaction.length,
         itemBuilder: (context,  index){
           return Card(
@@ -22,7 +25,7 @@ class TransactionList extends StatelessWidget {
                   margin: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Colors.deepPurple,
+                      color: Theme.of(context).primaryColor,
                       width: 2,
                     ),
                   ),

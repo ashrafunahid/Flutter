@@ -7,10 +7,23 @@ import 'package:personal_expenses/widgets/transaction_list.dart';
 void main() => runApp(
       MaterialApp(
         debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.deepOrange,
+          // primaryColor: Colors.orange,
+          accentColor: Colors.orange,
+          fontFamily: 'RobotoCondensed',
+          appBarTheme: AppBarTheme(
+            titleTextStyle: TextStyle(
+              fontFamily: 'RobotoMono',
+              fontSize: 20,
+            ),
+          ),
+        ),
         title: 'Personal Expenses App',
         home: MyHomePage(),
       ),
     );
+
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -36,12 +49,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   final List<Transaction> _userTransactions = [
-    Transaction(
-        id: "t1", title: "New Laptop", amount: 69.99, date: DateTime.now()),
-    Transaction(
-        id: "t2", title: "New Desktop", amount: 71.99, date: DateTime.now()),
-    Transaction(
-        id: "t2", title: "New Linux", amount: 54.99, date: DateTime.now()),
+    // Transaction(
+    //     id: "t1", title: "New Laptop", amount: 69.99, date: DateTime.now()),
+    // Transaction(
+    //     id: "t2", title: "New Desktop", amount: 71.99, date: DateTime.now()),
+    // Transaction(
+    //     id: "t2", title: "New Linux", amount: 54.99, date: DateTime.now()),
   ];
 
   void _addNewTransaction(String title, double amount){
