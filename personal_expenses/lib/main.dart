@@ -19,6 +19,9 @@ void main() => runApp(
               fontSize: 20,
             ),
           ),
+          textTheme: TextTheme(
+            button: TextStyle(color: Colors.white),
+          ),
         ),
         title: 'Personal Expenses App',
         home: MyHomePage(),
@@ -64,18 +67,25 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _addNewTransaction(String title, double amount){
+  void _addNewTransaction(String title, double amount, DateTime chosenDate){
     final newTx = Transaction(
         id: DateTime.now().toString(),
         title: title,
         amount: amount,
-        date: DateTime.now()
+        date: chosenDate,
     );
     setState(() {
       _userTransactions.add(newTx);
     });
   }
 
+  void _deleteTransaction(String id){
+    setState(() {
+      _userTransactions.removeWhere((element) {
+        return element.id == id;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: <Widget>[
             Chart(_recentTransactions),
-            TransactionList(_userTransactions),
+            TransactionList(_userTransactions, _deleteTransaction),
           ],
         ),
       ),
