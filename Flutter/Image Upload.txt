@@ -1,0 +1,102 @@
+BuildContext? dialogContext;
+  selectImageSource(){
+    showDialog(context: context, barrierDismissible: false, builder: (context){
+      dialogContext = context;
+      return AlertDialog(
+        content: Row(
+          children: [
+            IconButton(onPressed: (){uploadImageFromGallery();}, icon: Icon(Icons.browse_gallery)),
+            IconButton(onPressed: (){uploadImageFromCamera();}, icon: Icon(Icons.camera_alt_rounded)),
+          ],
+        ),
+      );
+    });
+  }
+  Future<void> uploadImageFromGallery() async {
+    //var path= await ImagePickerHelper().getImage();
+    final picker = ImagePicker();
+    //final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery,imageQuality: 40);
+
+    if (pickedFile != null) {
+
+      asyncFileUpload(pickedFile.path);
+    }
+
+    setState(() {
+
+    });
+  }
+  Future<void> uploadImageFromCamera() async {
+    //var path= await ImagePickerHelper().getImage();
+    final picker = ImagePicker();
+    //final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile = await picker.pickImage(source: ImageSource.camera, imageQuality: 40);
+
+    if (pickedFile != null) {
+
+      asyncFileUpload(pickedFile.path);
+    }
+
+    setState(() {
+
+    });
+  }
+
+  asyncFileUpload(String path) async {
+
+    EasyLoading.show();
+    // var id = await DeshiTourSharedPreferences.getUserID();
+    var user_id = userId;
+    //create multipart request for POST or PATCH method
+    try{
+      var request = http.MultipartRequest(
+          "POST",
+          Uri.parse(Utils.base_url+'user/info/update'));
+      //add text fields
+      request.fields["user_id"] = user_id;
+      //create multipart using filepath, string or bytes
+
+      var profilePhoto = await http.MultipartFile.fromPath("photo", path);
+      // var drl = await http.MultipartFile.fromPath("user_photo", path);
+      // //add multipart to request
+      request.files.add(profilePhoto);
+      // request.files.add(drl);
+      var response = await request.send();
+      // log("response:$response}");
+
+      EasyLoading.dismiss();
+      //Get the response from the server
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+      Map<String, dynamic> map = jsonDecode(responseString);
+      //String image = map['img'];
+      // log("response--->:$map}");
+      // Constants.showToast("Photo update successful",HexColor(AppColors.primaryColor));
+      // print('Photo Upload Successfully');
+      Navigator.pop(dialogContext!);
+      Fluttertoast.showToast(msg: "Profile Picture Updated Successfully",backgroundColor: Colors.black54);
+      // print("photo:");
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      setState(() {
+        userAvater=map['avatar_original'];
+        pref.setString("avatar_original", userAvater);
+      });
+
+      // print(Utils.base_url+'/public'+userAvater);
+      // await DeshiTourSharedPreferences.setPhoto(map['img']);
+    }catch(ee){
+      // log("eee->$ee");
+
+      EasyLoading.dismiss();
+      // Fluttertoast.showToast(msg: "Document update failed",backgroundColor: Colors.red);
+      // Constants.showToast("Photo update failed",Colors.red);
+      Fluttertoast.showToast(msg: "Something went wrong.",backgroundColor: Colors.black54);
+    }
+    EasyLoading.dismiss();
+
+
+    setState(() {
+
+    });
+  }
