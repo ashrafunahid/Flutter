@@ -1,0 +1,42 @@
+import 'package:flutter/material.dart';
+
+class AppLifeCycleDemo extends StatefulWidget {
+
+  @override
+  State<AppLifeCycleDemo> createState() => _AppLifeCycleDemoState();
+}
+
+class _AppLifeCycleDemoState extends State<AppLifeCycleDemo> with WidgetsBindingObserver{
+
+  @override
+  void initState() {
+
+    WidgetsBinding.instance.addObserver(this);
+
+    super.initState();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+
+    if (AppLifecycleState.paused == state){
+      print("Paused");
+    }
+
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  void dispose() {
+
+    WidgetsBinding.instance.removeObserver(this);
+
+    super.dispose();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
