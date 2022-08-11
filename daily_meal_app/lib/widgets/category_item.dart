@@ -1,4 +1,4 @@
-import 'package:daily_meal_app/category_meals_screen.dart';
+import 'package:daily_meal_app/screens/category_meals_screen.dart';
 import 'package:flutter/material.dart';
 
 class CategoryItem extends StatelessWidget {
@@ -9,9 +9,14 @@ class CategoryItem extends StatelessWidget {
   CategoryItem(this.id, this.title, this.color);
 
   void selectCategory(BuildContext context){
-    Navigator.of(context).push(MaterialPageRoute(builder: (context){
-      return CategoryMealsScreen(id, title);
-    }));
+    // Navigator.of(context).pushNamed('/categories', arguments: {
+    //   'categoryId': id,
+    //   'categoryTitle': title,
+    // });
+    Navigator.of(context).pushNamed(CategoryMealsScreen.routeName, arguments: {
+      'categoryId': id,
+      'categoryTitle': title,
+    });
   }
 
   @override
@@ -28,7 +33,7 @@ class CategoryItem extends StatelessWidget {
                 gradient: LinearGradient(
                     colors: [
                       color.withOpacity(0.7),
-                      color
+                      color,
                     ],
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,

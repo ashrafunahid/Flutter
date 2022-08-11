@@ -1,6 +1,9 @@
+import 'package:daily_meal_app/screens/category_meals_screen.dart';
+import 'package:daily_meal_app/screens/meal_detail_screen.dart';
+import 'package:daily_meal_app/screens/tabs_screen.dart';
 import 'package:flutter/material.dart';
 
-import 'categories_screen.dart';
+import 'screens/categories_screen.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -17,6 +20,19 @@ void main() {
         titleMedium: TextStyle(fontSize: 20.0, fontFamily: 'RobotoCondensed', fontWeight: FontWeight.bold),
       ),
     ),
-    home: CategoriesScreen(),
+    // home: CategoriesScreen(),
+    initialRoute: '/',
+    routes: {
+      '/': (context) => TabsScreen(),
+      CategoryMealsScreen.routeName: (context) => CategoryMealsScreen(),
+      MealDetailScreen.routeName: (context) => MealDetailScreen(),
+    },
+    onGenerateRoute: (setting){
+      print(setting.arguments);
+      return MaterialPageRoute(builder: (context) => CategoriesScreen());
+    },
+    onUnknownRoute: (settings){
+      return MaterialPageRoute(builder: (context) => CategoriesScreen());
+    },
   ));
 }
