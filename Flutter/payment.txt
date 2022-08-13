@@ -1,0 +1,210 @@
+
+
+import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:chuzedayguest/src/ui/home/home_screen.dart';
+import 'package:chuzedayguest/src/ui/payment_fail/payment_fail.dart';
+import 'package:chuzedayguest/src/ui/payment_success/payment_success_screen.dart';
+import 'package:chuzedayguest/src/utils/AppColors.dart';
+import 'package:chuzedayguest/src/utils/Constants.dart';
+import 'package:chuzedayguest/src/utils/Images.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:ndialog/src/dialogExtension.dart';
+import 'package:http/http.dart' as http;
+import 'package:webview_flutter/webview_flutter.dart';
+//import 'package:webviewx/webviewx.dart';
+
+
+class PaymentWebScreen extends StatefulWidget {
+  const PaymentWebScreen({Key? key,required this.url,this.isBack  }) : super(key: key);
+  final String url;
+  final bool? isBack;
+
+
+  @override
+  _PaymentWebScreenState createState() => _PaymentWebScreenState();
+}
+
+class _PaymentWebScreenState extends State<PaymentWebScreen> {
+
+  bool isLoading=false;
+  late InAppWebViewController _webViewController;
+  String html="";
+
+
+  //late WebViewXController _webViewXController;
+  final Completer<WebViewController> _controller =
+  Completer<WebViewController>();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+    await Future.delayed(Duration(milliseconds: 100)) ;
+ //   _webViewXController.loadContent(widget.url,SourceType.url,);
+      //_webViewController.loadUrl(urlRequest: URLRequest(url: Uri.parse(widget.url)));
+    });
+
+    //
+    // if(Platform.isAndroid){
+    //  // WebView.platform = SurfaceAndroidWebView();
+    // }
+
+
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: HexColor(AppColors.primaryColor),
+        leading: InkWell(
+          onTap: () {
+            if(widget.isBack!=null){
+              if(widget.isBack!){
+                Navigator.pop(context);
+              }else{
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomeScreen(defaultView: 0,)), (route) => false);
+              }
+            }else{
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomeScreen(defaultView: 0,)), (route) => false);
+
+            }
+
+              },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.arrow_back,
+                color:Colors.black,
+              ),
+            ),
+          ),
+        ),
+        title: Center(child:
+        Image.asset(
+          Images.appLogoWhite,
+          height: 50,
+        ),),
+        actions: [
+          Container(
+            margin: EdgeInsets.only(right: 15),
+            color: Colors.transparent,
+          ),
+        ],
+      ),
+      body: Container(
+
+        child:InAppWebView(
+          initialUrlRequest: URLRequest(url: Uri.parse(widget.url)),
+          onWebViewCreated: (InAppWebViewController controller) {
+            _webViewController = controller;
+           // _controller.complete(_webViewController);
+          },
+          onConsoleMessage: (InAppWebViewController controller, ConsoleMessage consoleMessage) {
+            print("ConsoleMessage: ${consoleMessage.message}");
+          },
+          initialOptions: InAppWebViewGroupOptions(
+
+            crossPlatform: InAppWebViewOptions(
+
+              clearCache: false,
+              javaScriptCanOpenWindowsAutomatically: true, // I thought this will help, but not working
+              mediaPlaybackRequiresUserGesture: true,
+            ),
+
+            android: AndroidInAppWebViewOptions(
+                supportMultipleWindows: true,
+                useHybridComposition: true),
+            ios: IOSInAppWebViewOptions(
+                allowsInlineMediaPlayback: true),
+          ),
+        onLoadStart: (InAppWebViewController controller, Uri? url) {
+          print("onLoadStart:->>>>$url");
+          print(widget.url);
+          if(url.toString().toLowerCase().contains("payment-fail")){
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const PaymentFailScreen(),));
+
+            //Navigator.pop(context,false);
+           // Fluttertoast.showToast(msg: "Payment Failed",toastLength: Toast.LENGTH_LONG);
+           // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>PaymentSuccessScreen()), (route) => false);
+          }else if(url.toString().toLowerCase().contains("payment-success")){
+
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const PaymentSuccessScreen(),));
+            // Navigator.pop(context, true);
+          }else{
+
+          }
+        },
+        )
+
+
+
+      /*WebView(
+          initialUrl: widget.url,
+          javascriptMode: JavascriptMode.unrestricted,
+          onWebViewCreated: (WebViewController webViewController) {
+            _controller.complete(webViewController);
+          },
+          onPageStarted: (String url) {
+            (" printss"+url);
+            FocusScope.of(context).requestFocus(FocusNode());
+            if(url.toLowerCase().contains("payment-fail")) {
+              Navigator.pop(context, false);
+            }else if(url.toLowerCase().contains("payment-success")){
+
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const PaymentSuccessScreen(),));
+              // Navigator.pop(context, true);
+            }else{
+
+            }
+          },
+          onPageFinished: (String url) {
+            print('Page finished loading: $url');
+          },
+        )*/
+        /*WebViewX(
+
+            initialContent: '<h4> Please wait... </h4>',
+            javascriptMode: JavascriptMode.unrestricted,
+            initialSourceType: SourceType.html, width: double.infinity, height: double.infinity,
+          onWebViewCreated: (controller) {
+            _webViewXController=controller;
+            _webViewXController.loadContent(widget.url,SourceType.url,);
+
+
+          },
+          onPageStarted: (url) {
+           (" printss"+url);
+            FocusScope.of(context).requestFocus(FocusNode());
+            if(url.toLowerCase().contains("payment-fail")) {
+              Navigator.pop(context, false);
+            }else if(url.toLowerCase().contains("payment-success")){
+
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const PaymentSuccessScreen(),));
+              // Navigator.pop(context, true);
+            }else{
+
+            }
+          },
+
+
+        )*/
+      )
+    );
+  }
+
+
+
+
+}
+

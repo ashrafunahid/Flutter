@@ -1,0 +1,65 @@
+  Future<void> uploadImage() async {
+    //var path= await ImagePickerHelper().getImage();
+    final picker = ImagePicker();
+    //final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery,imageQuality: 40);
+
+    if (pickedFile != null) {
+
+       asyncFileUpload(pickedFile.path);
+    }
+
+    setState(() {
+
+    });
+
+  }
+
+  asyncFileUpload(String path) async {
+
+    EasyLoading.show();
+    var id = await DeshiTourSharedPreferences.getUserID();
+    //create multipart request for POST or PATCH method
+    try{
+      var request = http.MultipartRequest(
+          "POST",
+          Uri.parse(
+              Constants.updatePhoto));
+      //add text fields
+      request.fields["id"] = id;
+      //create multipart using filepath, string or bytes
+
+      var profilePhoto = await http.MultipartFile.fromPath("user_photo", path);
+      // var drl = await http.MultipartFile.fromPath("user_photo", path);
+      // //add multipart to request
+       request.files.add(profilePhoto);
+      // request.files.add(drl);
+      var response = await request.send();
+      log("response:$response}");
+
+      EasyLoading.dismiss();
+      //Get the response from the server
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+      Map<String, dynamic> map = jsonDecode(responseString);
+      //String image = map['img'];
+      log("response--->:$map}");
+      Constants.showToast("Photo update successful",HexColor(AppColors.primaryColor));
+      //Fluttertoast.showToast(msg: "Document update successful",backgroundColor: HexColor(AppColors.primaryColor));
+     print("photo:}");
+      setState(() {
+        photo=map['img'];
+      });
+      await DeshiTourSharedPreferences.setPhoto(map['img']);
+    }catch(ee){
+      log("eee->$ee");
+
+      EasyLoading.dismiss();
+      // Fluttertoast.showToast(msg: "Document update failed",backgroundColor: Colors.red);
+      Constants.showToast("Photo update failed",Colors.red);
+    }
+    EasyLoading.dismiss();
+
+
+    setState(() {});
+  }
