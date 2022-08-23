@@ -1,0 +1,79 @@
+import 'dart:async';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
+import 'package:flutter/material.dart';
+
+void main(){
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Dropdown List From API',
+      home: MyHome(),
+    );
+  }
+}
+
+class MyHome extends StatefulWidget {
+
+  @override
+  State<MyHome> createState() => _MyHomeState();
+}
+
+class _MyHomeState extends State<MyHome> {
+
+  var manufacturerId;
+  var manufacturerName = '';
+  String selectedVehicleMake = '';
+
+  List<dynamic> vehicleMakeList = [];
+
+  Future getVehicleMakeData() async {
+    try {
+      var url = Uri.parse('https://motorsheba.com/api/list/manufacturer');
+      var response = await http.read(url);
+      setState(() {
+        var decode = convert.jsonDecode(response);
+        vehicleMakeList = decode;
+        print(decode);
+      });
+
+    } on TimeoutException catch (err) {print(err);}
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    this.getVehicleMakeData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Shop App"),
+      ),
+      body: DropdownButton(
+        items: vehicleMakeList.map((e) {
+          return DropdownMenuItem(
+            child: Text(e['name']),
+            value: e['id'].toString(),
+          );
+        }).toList(),
+        onChanged: (newValue){
+          setState(() {
+            manufacturerId = newValue;
+            print(manufacturerId);
+          });
+        },
+        value: manufacturerId,
+      ),
+    );
+  }
+}
