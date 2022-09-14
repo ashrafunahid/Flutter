@@ -1,0 +1,2 @@
+var urlPattern = r"(https?|ftp)://([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:‌​,.;]*)?";
+var result = new RegExp(urlPattern, caseSensitive: false).firstMatch('https://www.google.com');

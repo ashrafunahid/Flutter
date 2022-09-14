@@ -1,0 +1,18 @@
+              Scaffold.of(context).hideCurrentSnackBar(); // Use it if already a snackbar is visible on the screen
+              Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Text('Added item to cart'),
+                  duration: Duration(seconds: 2),
+                action: SnackBarAction(
+                  label: 'UNDO',
+                  onPressed: (){
+                    cart.removeSingleItem(product.id);
+                  },
+                ),
+              ));
+
+
+If you're working with Flutter 2 or higher, you might see a deprecation warning regarding the hideCurrentSnackBar() and showSnackbar() methods.
+You can get rid of them by using:
+
+ScaffoldMessenger.of(context).hideCurrentSnackBar()
+ScaffoldMessenger.of(context).showSnackbar(...)
