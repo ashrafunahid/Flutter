@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app_using_provider/helpers/custom_route.dart';
 import 'package:shop_app_using_provider/providers/auth.dart';
 import 'package:shop_app_using_provider/providers/orders.dart';
 import 'package:shop_app_using_provider/screens/cart_screen.dart';
 import 'package:shop_app_using_provider/screens/edit_product_screen.dart';
 import 'package:shop_app_using_provider/screens/orders_screen.dart';
+import 'package:shop_app_using_provider/screens/splash_screen.dart';
 import 'package:shop_app_using_provider/screens/user_products_screen.dart';
 import './providers/cart.dart';
 import 'package:shop_app_using_provider/screens/product_detail_screen.dart';
@@ -44,8 +46,18 @@ class MyApp extends StatelessWidget {
               primarySwatch: Colors.purple,
               accentColor: Colors.deepOrange,
               fontFamily: 'Lato',
+              pageTransitionsTheme: PageTransitionsTheme(
+                builders: {
+                  TargetPlatform.android: CustomPageTransitionBuilder(),
+                  TargetPlatform.iOS: CustomPageTransitionBuilder(),
+                }
+              ),
             ),
-            home: auth.isAuth ? ProductsOverviewScreen() : AuthScreen(),
+            home: auth.isAuth ? ProductsOverviewScreen()
+                : FutureBuilder(
+              future: auth.tryAutoLogin(),
+              builder: (context, authResultSnapshot) => authResultSnapshot.connectionState == ConnectionState.waiting ? SplashScreen() : AuthScreen(),
+            ),
             routes: {
               ProductDetailScreen.routeName: (context) => ProductDetailScreen(),
               CartScreen.routeName: (context) => CartScreen(),
