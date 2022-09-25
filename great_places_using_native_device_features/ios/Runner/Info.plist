@@ -30,10 +30,16 @@
 	<string>We need to take a picture</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need to take a picture</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need location on map</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	 <string>We need location on map</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
