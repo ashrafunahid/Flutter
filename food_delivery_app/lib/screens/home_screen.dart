@@ -10,6 +10,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  _buildRestaurants(){
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,6 +66,16 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           RecentOrders(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Text('Nearby Restaurants', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24.0),),
+              ),
+              _buildRestaurants(),
+            ],
+          ),
         ],
       ),
     );
