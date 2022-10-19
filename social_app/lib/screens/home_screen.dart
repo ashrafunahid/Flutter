@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:social_app/data/data.dart';
+import 'package:social_app/models/user_model.dart';
+import 'package:social_app/widgets/following_users.dart';
+
+import '../widgets/custom_drawer.dart';
+import '../widgets/post_carousel.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -9,13 +15,17 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin{
 
   TabController _tabController;
+  PageController _pageController;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _pageController = PageController(initialPage: 1, viewportFraction: 0.7);
   }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,6 +57,17 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             Tab(text: 'Latest',),
           ],
         ),
+      ),
+      drawer: CustomDrawer(),
+      body: ListView(
+        children: [
+          FollowingUsers(),
+          PostCarousel(
+            pageController: _pageController,
+            title: 'Posts',
+            posts: posts,
+          ),
+        ],
       ),
     );
   }
