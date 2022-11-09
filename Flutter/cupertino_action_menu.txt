@@ -1,0 +1,44 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+void main(){
+  runApp(
+    MaterialApp(
+      title: 'Cupertino Action Menu',
+      home: MyHome(),
+    ),
+  );
+}
+
+class MyHome extends StatefulWidget {
+
+  @override
+  State<MyHome> createState() => _MyHomeState();
+}
+
+class _MyHomeState extends State<MyHome> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: SizedBox(
+          height: 100,
+          width: 100,
+          child: CupertinoContextMenu(
+            child: Image.network('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoAEssp5xBCP420VJTAkFru3VTpDnHVnXzjg&usqp=CAU'),
+            actions: [
+              CupertinoContextMenuAction(
+                  child: Text('Sub Menu - 1'),
+                onPressed: (){},
+              ),
+              CupertinoContextMenuAction(
+                child: Text('Sub Menu - 2'),
+                onPressed: (){},
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -1,0 +1,64 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+void main(){
+  runApp(
+    CupertinoApp(
+      title: 'Cupertino Picker',
+      home: MyHome(),
+    ),
+  );
+}
+
+class MyHome extends StatefulWidget {
+
+  @override
+  State<MyHome> createState() => _MyHomeState();
+}
+
+class _MyHomeState extends State<MyHome> {
+  
+  int _selectedValue = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+        child: Center(
+          child: CupertinoButton.filled(
+              child: Text('Value = ${_selectedValue}'),
+              onPressed: (){
+                showCupertinoModalPopup(
+                    context: context,
+                    builder: (BuildContext context){
+                      return Container(
+                        height: MediaQuery.of(context).size.height * .30,
+                        child: CupertinoPicker(
+                          backgroundColor: Colors.white,
+                          itemExtent: 30,
+                          scrollController: FixedExtentScrollController(
+                            initialItem: _selectedValue
+                          ),
+                          children: [
+                            Text('0'),
+                            Text('1'),
+                            Text('2'),
+                            Text('3'),
+                            Text('4'),
+                            Text('5'),
+                          ],
+                          onSelectedItemChanged: (int value){
+                            setState(() {
+                              _selectedValue = value;
+                              print(value);
+                            });
+                          },
+                        ),
+                      );
+                    }
+                );
+              }
+          ),
+        ),
+    );
+  }
+}
