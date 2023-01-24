@@ -7,7 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:320762022270:android:cc6c8d6225d48737158b2f",
+        "mobilesdk_app_id": "1:320762022270:android:25a862a56c1da43b158b2f",
         "android_client_info": {
           "package_name": "com.example.native_notify_demo"
         }
